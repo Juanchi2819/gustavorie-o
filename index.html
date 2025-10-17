@@ -70,6 +70,9 @@
             font-size: var(--font-size-base);
             line-height: var(--line-height-normal);
             background-color: var(--color-bg);
+            background-image: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(6, 182, 212, 0.25), var(--color-bg) 70%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: var(--color-text);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -137,6 +140,40 @@
         }
         @media (max-width: 768px) {
             .grid-cols-2, .grid-cols-3 { grid-template-columns: 1fr; }
+            
+            /* --- AJUSTES RESPONSIVE PARA MÓVILES --- */
+            
+            .lamp-section {
+                padding-bottom: var(--spacing-10);
+            }
+            .lamp-content-wrapper {
+                 padding-top: var(--spacing-7);
+            }
+
+            .lamp-main-content {
+                width: 80%;
+                margin: 0 auto;
+            }
+
+            h1 { font-size: 34px; line-height: 1.2; }
+            h2 { font-size: var(--font-size-2xl); }
+            h3 { font-size: var(--font-size-xl); }
+
+            .lamp-title { font-size: 34px; }
+            .hero-subtitle { font-size: var(--font-size-base); }
+            .kpi-number { font-size: var(--font-size-4xl); }
+
+            .section {
+                padding-top: var(--spacing-10);
+                padding-bottom: var(--spacing-10);
+            }
+            .section-header { margin-bottom: var(--spacing-9); }
+            .section-header p { font-size: var(--font-size-base); }
+
+            .sticky-scroll-text-block h3 { font-size: var(--font-size-lg); }
+            .sticky-scroll-text-block p { font-size: var(--font-size-sm); }
+            
+            .cta-final h2 { font-size: var(--font-size-xl); }
         }
 
         /*
@@ -221,21 +258,20 @@
         /* SECTION: Hero / Lamp */
         .lamp-section {
             width: 100%;
-            min-height: 80vh; /* AJUSTADO para que la siguiente sección se asome más */
-            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(6, 182, 212, 0.25), var(--color-bg) 70%);
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             overflow: hidden;
             padding-top: var(--spacing-6);
+            padding-bottom: var(--spacing-8);
         }
 
         .lamp-header {
             width: 100%;
             z-index: 20;
         }
-        /* MODIFICACIÓN: Extender el header a todo el ancho */
+        
         .lamp-header.container {
             max-width: none;
         }
@@ -266,6 +302,7 @@
             flex-direction: column;
             justify-content: center;
             text-align: center;
+            padding-top: var(--spacing-11);
         }
         
         .lamp-title {
@@ -283,7 +320,7 @@
             color: var(--color-text-muted);
             font-size: var(--font-size-base);
             max-width: 65ch;
-            margin: var(--spacing-7) auto var(--spacing-8);
+            margin: var(--spacing-7) auto var(--spacing-5);
             line-height: 1.7;
             font-weight: 400;
         }
@@ -299,7 +336,7 @@
 
         /* SECTION: Video Explicativo */
         .video-explainer-section {
-            padding-top: var(--spacing-7); /* Reducido para juntar con la sección hero */
+            padding-top: 0;
         }
         .video-explainer-section .video-placeholder {
             margin: 0 auto;
@@ -312,7 +349,7 @@
 
         .video-pre-text {
             color: var(--color-text-muted);
-            font-size: var(--font-size-base); /* AJUSTADO */
+            font-size: var(--font-size-base);
             line-height: var(--line-height-relaxed);
             max-width: 70ch;
             text-align: center;
@@ -379,7 +416,7 @@
             }
         }
         .sticky-scroll-text-block {
-            padding: var(--spacing-12) 0; /* AJUSTADO: Aumentado a 150% */
+            padding: var(--spacing-12) 0;
             opacity: 0.3;
             transition: opacity var(--duration-base) var(--easing-standard);
         }
