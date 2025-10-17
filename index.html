@@ -90,7 +90,7 @@
         }
         p { margin: 0 0 var(--spacing-4); }
         a { color: var(--color-primary); text-decoration: none; }
-        img { max-width: 100%; height: auto; display: block; }
+        img, video { max-width: 100%; height: auto; display: block; }
         svg { display: block; width: 100%; height: 100%; }
 
         /*
@@ -135,7 +135,7 @@
         @media (max-width: 1023px) {
             .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
         }
-        @media (max-width: 639px) {
+        @media (max-width: 768px) {
             .grid-cols-2, .grid-cols-3 { grid-template-columns: 1fr; }
         }
 
@@ -143,13 +143,8 @@
          * ANIMATIONS
          */
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 0% { transform: translateY(-6px); } 50% { transform: translateY(6px); } 100% { transform: translateY(-6px); } }
-        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        @keyframes scroll { to { transform: translate(calc(-50% - (var(--spacing-6) / 2))); } }
+        @keyframes lamp-fade-in { to { opacity: 1; transform: translateY(0); } }
         
-        .animate-on-load { animation: fadeInUp 600ms var(--easing-emphasized) forwards; opacity: 0; }
-        .animate-on-load.stagger-item { animation-delay: calc(var(--stagger-index) * 100ms); }
-
         .animate-on-scroll { opacity: 0; transition: opacity var(--duration-base) var(--easing-standard), transform var(--duration-base) var(--easing-standard), clip-path 0.8s var(--easing-emphasized); }
         .animate-on-scroll.is-visible { opacity: 1; }
         .anim-fadeInUp { transform: translateY(16px); }
@@ -197,75 +192,256 @@
             transition: all 0.2s ease-out; transform-style: preserve-3d;
         }
 
-        /* SECTION: Navbar */
-        .navbar {
-            position: fixed; top: 0; left: 0; right: 0; height: 72px; z-index: 1000; transition: height var(--duration-base) var(--easing-standard), background-color var(--duration-base) var(--easing-standard), box-shadow var(--duration-base) var(--easing-standard), border-color var(--duration-base) var(--easing-standard);
+        /* Botón 3D CTA */
+        .btn-cta-3d {
+            padding: 18px 32px;
+            font-size: var(--font-size-md);
+            border: none;
+            border-radius: var(--radius-xl);
+            background-color: var(--color-primary);
+            color: var(--color-white-ref);
+            box-shadow: 0 6px 0 #1a3fb3, 0 8px 15px rgba(0,0,0,0.4); /* Sombra 3D y sombra de profundidad */
+            transform: translateY(0);
+            transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+            text-decoration: none;
+            display: inline-block;
         }
-        .navbar.scrolled {
-            height: 60px; background-color: rgba(17,17,17,0.8); backdrop-filter: blur(var(--blur-lg)); border-bottom: 1px solid var(--color-border); box-shadow: var(--shadow-md);
+
+        .btn-cta-3d:hover {
+            background-color: #3b6aff; /* Tono ligeramente más claro */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #1a3fb3, 0 12px 20px rgba(0,0,0,0.35);
         }
-        .navbar-container {
-            height: 100%; display: flex; align-items: center; justify-content: space-between;
+        
+        .btn-cta-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1a3fb3, 0 4px 6px rgba(0,0,0,0.4);
         }
-        .navbar-logo {
+        
+        /* SECTION: Hero / Lamp */
+        .lamp-section {
+            width: 100%;
+            min-height: 80vh; /* AJUSTADO para que la siguiente sección se asome más */
+            background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(6, 182, 212, 0.25), var(--color-bg) 70%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            padding-top: var(--spacing-6);
+        }
+
+        .lamp-header {
+            width: 100%;
+            z-index: 20;
+        }
+        /* MODIFICACIÓN: Extender el header a todo el ancho */
+        .lamp-header.container {
+            max-width: none;
+        }
+
+        .lamp-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: var(--spacing-4) var(--spacing-6);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .lamp-logo {
             font-size: var(--font-size-lg); font-weight: var(--font-bold); display: flex; align-items: center; gap: var(--spacing-2); color: var(--color-text);
         }
-        .navbar-logo-icon { width: 32px; height: 32px; color: var(--color-primary); }
-        .navbar-nav { display: none; gap: var(--spacing-7); }
-        @media (min-width: 1024px) { .navbar-nav { display: flex; } }
-        .navbar-nav a {
-            font-size: var(--font-size-base); font-weight: var(--font-medium); color: var(--color-text); position: relative; padding: var(--spacing-2) 0;
-        }
-        .navbar-nav a::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background-color: var(--color-primary); transform: scaleX(0); transform-origin: right; transition: transform var(--duration-base) var(--easing-emphasized);
-        }
-        .navbar-nav a:hover::after {
-            transform: scaleX(1); transform-origin: left;
-        }
-        .mobile-menu-toggle { display: block; }
-        @media (min-width: 1024px) { .mobile-menu-toggle { display: none; } }
-
-        /* SECTION: Hero */
-        .hero {
-            padding-top: 150px; padding-bottom: 120px; position: relative; overflow: hidden;
-        }
-        .hero-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-        }
-        .hero-bg .aurora {
-            position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, rgba(45, 93, 244, 0.15), transparent 50%), radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.1), transparent 50%); animation: float 15s ease-in-out infinite; opacity: 0.5;
-        }
-        .hero-grid { display: grid; align-items: center; gap: var(--spacing-12); }
-        @media (min-width: 1024px) { .hero-grid { grid-template-columns: 1.2fr 1fr; } }
-        .hero-content h1 { margin-bottom: var(--spacing-5); }
-        .hero-content .subtitle { font-size: var(--font-size-lg); color: var(--color-text-muted); max-width: 45ch; margin-bottom: var(--spacing-8); }
-        .hero-ctas { display: flex; flex-wrap: wrap; gap: var(--spacing-4); }
-        .hero-image-wrapper { position: relative; }
-        .hero-image {
-            border-radius: var(--radius-2xl); box-shadow: var(--shadow-lg); aspect-ratio: 4 / 5; object-fit: cover; animation: float 6s ease-in-out infinite;
-        }
-        .identification-box {
-            background-color: var(--color-surface); padding: var(--spacing-6); border-radius: var(--radius-lg); margin-top: var(--spacing-9); border: var(--border-hairline);
-        }
-        .identification-box p { color: var(--color-text-muted); font-size: var(--font-size-sm); margin: 0; }
+        .lamp-logo-icon { width: 32px; height: 32px; color: var(--color-primary); }
+        .lamp-nav-links { display: none; gap: var(--spacing-7); }
+        @media (min-width: 1024px) { .lamp-nav-links { display: flex; } }
+        .lamp-nav-links a { font-size: var(--font-size-base); font-weight: var(--font-medium); color: var(--color-text-muted); transition: color var(--duration-fast); }
+        .lamp-nav-links a:hover { color: var(--color-text); }
         
-        /* SECTION: Refuerzo */
-        .reinforcement-section {
+        .lamp-content-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             text-align: center;
         }
-        .reinforcement-section h2 {
-            font-size: var(--font-size-3xl);
-            max-width: 25ch;
-            margin: 0 auto var(--spacing-6);
+        
+        .lamp-title {
+            background-image: linear-gradient(to bottom, #e2e8f0, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(100px);
+            animation: lamp-fade-in 0.8s ease-in-out 0.3s forwards;
         }
-        .reinforcement-section .lead {
-            font-size: var(--font-size-lg);
+        .hero-subtitle {
             color: var(--color-text-muted);
-            max-width: 50ch;
-            margin: 0 auto;
+            font-size: var(--font-size-base);
+            max-width: 65ch;
+            margin: var(--spacing-7) auto var(--spacing-8);
+            line-height: 1.7;
+            font-weight: 400;
         }
-        @media(min-width: 768px) {
-            .reinforcement-section h2 { font-size: var(--font-size-4xl); }
+        .hero-ctas { display: flex; flex-wrap: wrap; gap: var(--spacing-4); justify-content: center; }
+        
+        .text-generate-word {
+            opacity: 0;
+            transition: opacity 350ms ease;
+        }
+        .text-generate-word.visible {
+            opacity: 1;
+        }
+
+        /* SECTION: Video Explicativo */
+        .video-explainer-section {
+            padding-top: var(--spacing-7); /* Reducido para juntar con la sección hero */
+        }
+        .video-explainer-section .video-placeholder {
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        .video-caption {
+            text-align: center;
+            margin-top: var(--spacing-8);
+        }
+
+        .video-pre-text {
+            color: var(--color-text-muted);
+            font-size: var(--font-size-base); /* AJUSTADO */
+            line-height: var(--line-height-relaxed);
+            max-width: 70ch;
+            text-align: center;
+            margin: 0 auto var(--spacing-8);
+        }
+
+        .video-subtext {
+             color: var(--color-text-muted);
+             font-size: var(--font-size-base);
+             line-height: var(--line-height-relaxed);
+             max-width: 70ch;
+             margin: var(--spacing-8) auto 0;
+        }
+       
+        /* SECTION: KPIs / Credenciales */
+        .kpi-card { text-align: center; padding: var(--spacing-7); }
+        .kpi-number {
+            font-size: var(--font-size-5xl); font-weight: var(--font-extrabold); line-height: var(--line-height-tight); color: var(--color-primary); margin-bottom: var(--spacing-3);
+        }
+        .kpi-label { font-size: var(--font-size-md); color: var(--color-text-muted); }
+
+        /* SECTION: Testimonials & Reseñas */
+        .testimonial-card { text-align: center; }
+        .video-placeholder {
+            position: relative; background-color: var(--color-surface); border-radius: var(--radius-lg); aspect-ratio: 16/9; margin-bottom: var(--spacing-5); overflow: hidden;
+        }
+        .video-placeholder img {
+             width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-base) var(--easing-standard);
+        }
+        .video-placeholder:hover img {
+            transform: scale(1.05);
+        }
+        .play-button {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background-color: rgba(255,255,255,0.1); border-radius: 50%; display: grid; place-items: center; backdrop-filter: blur(4px); transition: background-color var(--duration-fast);
+        }
+        .play-button:hover {
+            background-color: rgba(45, 93, 244, 0.5);
+        }
+        .play-button svg { width: 24px; height: 24px; color: white; }
+        .testimonial-author { font-weight: var(--font-semibold); }
+        .review-card img { border-radius: var(--radius-lg); border: var(--border-hairline); }
+
+        /* SECTION: Sticky Scroll Reveal */
+        .sticky-scroll-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-10);
+        }
+        @media (min-width: 1024px) {
+            .sticky-scroll-container {
+                flex-direction: row;
+            }
+        }
+        .sticky-scroll-text-panel {
+            width: 100%;
+            padding-right: 0;
+            padding-bottom: var(--spacing-8);
+        }
+         @media (min-width: 1024px) {
+            .sticky-scroll-text-panel {
+                width: 50%;
+                padding-right: var(--spacing-10);
+                padding-bottom: 0;
+            }
+        }
+        .sticky-scroll-text-block {
+            padding: var(--spacing-12) 0; /* AJUSTADO: Aumentado a 150% */
+            opacity: 0.3;
+            transition: opacity var(--duration-base) var(--easing-standard);
+        }
+        .sticky-scroll-text-block:first-child {
+            padding-top: 0;
+        }
+        .sticky-scroll-text-block:last-child {
+            padding-bottom: 0;
+        }
+        .sticky-scroll-text-block.is-active {
+            opacity: 1;
+        }
+        .sticky-scroll-text-block h3 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-3);
+        }
+        .sticky-scroll-text-block p {
+            font-size: var(--font-size-md);
+            color: var(--color-text-muted);
+            line-height: var(--line-height-relaxed);
+        }
+
+        .sticky-scroll-image-panel {
+            width: 100%;
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .sticky-scroll-image-panel {
+                width: 50%;
+            }
+        }
+
+        .sticky-scroll-image-card {
+            position: sticky;
+            top: var(--spacing-12);
+            height: 60vh;
+            max-height: 500px;
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            background-color: var(--color-surface);
+            border: var(--border-hairline);
+        }
+        .sticky-scroll-image-card .image-content {
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-bold);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; }}
+
+        .sticky-scroll-image-card .image-content.is-active {
+            display: flex;
+        }
+        .sticky-scroll-image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* SECTION: Procedimientos Combinados */
@@ -278,35 +454,7 @@
         .tech-card h4 { margin-bottom: var(--spacing-2); }
         .tech-card p { font-size: var(--font-size-sm); color: var(--color-text-muted); margin: 0; }
 
-        /* SECTION: KPIs / Credenciales */
-        .kpi-card { text-align: center; padding: var(--spacing-7); }
-        .kpi-number {
-            font-size: var(--font-size-5xl); font-weight: var(--font-extrabold); line-height: var(--line-height-tight); color: var(--color-primary); margin-bottom: var(--spacing-3);
-        }
-        .kpi-label { font-size: var(--font-size-md); color: var(--color-text-muted); }
-
-        /* SECTION: Testimonials & Reseñas */
-        .testimonial-card { text-align: center; }
-        .video-placeholder {
-            position: relative; background-color: var(--color-surface); border-radius: var(--radius-lg); aspect-ratio: 16/9; margin-bottom: var(--spacing-5);
-        }
-        .play-button {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background-color: rgba(255,255,255,0.1); border-radius: 50%; display: grid; place-items: center; backdrop-filter: blur(4px);
-        }
-        .play-button svg { width: 24px; height: 24px; color: white; }
-        .testimonial-author { font-weight: var(--font-semibold); }
-        
-        .review-card img {
-            border-radius: var(--radius-lg); border: var(--border-hairline);
-        }
-
-        /* SECTION: Proceso */
-        .timeline-item { margin-bottom: var(--spacing-8); }
-        .timeline-item h4 { display: flex; align-items: center; gap: var(--spacing-4); margin-bottom: var(--spacing-3); }
-        .timeline-item h4 span { font-size: 2em; }
-        .timeline-item p { color: var(--color-text-muted); margin: 0; }
-
-        /* SECTION: Por que elegir */
+        /* SECTION: Por que elegirnos */
         .why-us-grid { display: grid; grid-template-columns: 1fr; gap: var(--spacing-9); align-items: center; }
         @media (min-width: 768px) { .why-us-grid { grid-template-columns: 300px 1fr; } }
         .why-us-image img {
@@ -339,61 +487,104 @@
         .footer-bottom {
             margin-top: var(--spacing-11); padding-top: var(--spacing-6); border-top: var(--border-hairline); text-align: center; font-size: var(--font-size-sm); color: var(--color-text-muted);
         }
+        
+        /* FORM STYLES */
+        .contact-form .form-group {
+            margin-bottom: var(--spacing-6);
+        }
+        .contact-form label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-medium);
+            margin-bottom: var(--spacing-2);
+            color: var(--color-text-muted);
+        }
+        .contact-form .form-control {
+            width: 100%;
+            padding: var(--spacing-3) var(--spacing-4);
+            background-color: var(--color-surface);
+            border: var(--border-hairline);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-size: var(--font-size-base);
+            transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+        }
+        .contact-form .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(45, 93, 244, 0.3);
+        }
+        .contact-form .form-buttons {
+            text-align: center;
+            margin-top: var(--spacing-8);
+        }
+        .contact-form .privacy-notice {
+            text-align: center;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+            margin-top: var(--spacing-4);
+        }
+
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-to-content">Saltar al contenido principal</a>
 
-    <!-- SECTION: Navbar -->
-    <header class="navbar" id="main-navbar">
-        <div class="container navbar-container">
-            <a href="#" class="navbar-logo" aria-label="Página de inicio de Dr. Gustavo Riaño">
-                <div class="navbar-logo-icon">
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z"></path></svg>
-                </div>
-                Dr. Gustavo Riaño
-            </a>
-            <nav class="navbar-nav">
-                <a href="#propuesta">Propuesta</a>
-                <a href="#proceso">Proceso</a>
-                <a href="#tecnologia">Tecnología</a>
-                <a href="#porque-elegirnos">Por qué elegirnos</a>
-                <a href="#contacto">Contacto</a>
-            </nav>
-            <button class="mobile-menu-toggle btn btn-ghost" aria-label="Abrir menú de navegación">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            </button>
-        </div>
-    </header>
-
     <main id="main-content">
-        <!-- SECTION: Hero -->
-        <section class="hero" id="propuesta">
-            <div class="hero-bg parallax-bg">
-                <div class="aurora"></div>
+        <!-- SECTION: Hero / Lamp -->
+        <section class="lamp-section" id="propuesta">
+            <div class="lamp-header container">
+                 <nav class="lamp-nav">
+                    <a href="#" class="lamp-logo" aria-label="Página de inicio de Dr. Gustavo Riaño">
+                        <div class="lamp-logo-icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z"></path></svg>
+                        </div>
+                        Dr. Gustavo Riaño
+                    </a>
+                    <div class="lamp-nav-links">
+                        <a href="#propuesta">Propuesta</a>
+                        <a href="#proceso">Proceso</a>
+                        <a href="#tecnologia">Tecnología</a>
+                        <a href="#porque-elegirnos">Por qué elegirnos</a>
+                        <a href="#contacto">Contacto</a>
+                    </div>
+                </nav>
             </div>
-            <div class="container hero-grid">
-                <div class="hero-content">
-                    <h1 class="animate-on-load stagger-item" style="--stagger-index: 1;">Decile adiós a la flacidez y la grasa localizada.</h1>
-                    <p class="subtitle animate-on-load stagger-item" style="--stagger-index: 2;">Lucí curvas delicadas y una definición 100% a tu medida, con resultados naturales que restauran y protegen tu cuerpo.</p>
-                    <div class="hero-ctas animate-on-load stagger-item" style="--stagger-index: 3;">
-                        <a href="#contacto" class="btn btn-primary magnetic-button">Consulta Dr. Riaño</a>
+
+            <div class="lamp-content-wrapper container">
+                <div class="lamp-main-content">
+                    <h1 class="lamp-title">
+                        Decile adiós a la flacidez y la grasa localizada. <br> Lucí curvas delicadas y una definición a tu medida.
+                    </h1>
+                    
+                    <p id="generative-text" class="hero-subtitle">Ideal para mujeres que, tras embarazos o cambios de peso, ya no se sienten cómodas con su cuerpo por su abdomen flácido, estrías, busto caído, celulitis y grasa localizada que ni dieta ni gimnasio logran mejorar.</p>
+
+                    <div class="hero-ctas">
+                        <!-- Botón eliminado -->
                     </div>
-                    <div class="identification-box animate-on-load stagger-item" style="--stagger-index: 4;">
-                        <p><strong>Ideal para mujeres</strong> que, tras embarazos o cambios de peso, ya no se sienten cómodas con su cuerpo por su abdomen flácido, estrías, busto caído, celulitis y grasa localizada que ni dieta ni gimnasio logran mejorar.</p>
-                    </div>
-                </div>
-                <div class="hero-image-wrapper animate-on-load" style="animation-delay: 200ms;">
-                    <img src="https://placehold.co/600x750/1A1A1A/EAEAEA?text=Mommy+Makeover" alt="Silueta femenina elegante y natural tras un Mommy Makeover" class="hero-image parallax-y">
                 </div>
             </div>
         </section>
 
-        <!-- SECTION: Refuerzo -->
-        <section class="section reinforcement-section">
-            <div class="container anim-fadeInUp animate-on-scroll">
-                <h2>Un plan estético diseñado como una obra de arte médica.</h2>
-                <p class="lead">Este no es un procedimiento estético más. Es una experiencia médica de lujo, con resultados naturales que trascienden lo físico: recuperar tu confianza, tu feminidad y tu libertad, con la certeza de haber elegido lo mejor que existe en el mundo.</p>
+        <!-- SECTION: Video Explicativo -->
+        <section class="section video-explainer-section">
+            <div class="container">
+                <p id="video-pre-text-animated" class="video-pre-text">Tu transformación explicada por el doctor Riaño. Míralo completo para entender procesos, seguridad y resultados.</p>
+                <div class="video-placeholder">
+                    <!-- Usamos un placeholder de imagen para simular el video -->
+                    <img src="https://placehold.co/960x540/1A1A1A/EAEAEA?text=Video+Explicativo" alt="Video explicativo del Dr. Riaño">
+                    <div class="play-button">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+                    </div>
+                </div>
+                <div class="video-caption">
+                    <!-- BOTÓN 3D MOVIDO AQUÍ -->
+                    <a href="https://wa.me/TUNUMERODEWHATSAPP" target="_blank" class="btn btn-cta-3d">Consulta Dr. Riaño</a>
+                     <!-- TEXTO NUEVO AÑADIDO -->
+                    <p class="video-subtext">
+                        Cada plan estético se diseña como una obra de arte médica, planificada con estudios exhaustivos y simulaciones 3D. No es un procedimiento más, sino una experiencia de lujo con resultados naturales para recuperar tu confianza, feminidad y libertad.
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -445,6 +636,7 @@
                         <h3>Testimonios en Video</h3>
                         <div class="card testimonial-card">
                             <div class="video-placeholder">
+                                <img src="https://placehold.co/600x338/1A1A1A/EAEAEA?text=Testimonio+Video" alt="Testimonio en video de una paciente">
                                 <div class="play-button">
                                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
                                 </div>
@@ -462,40 +654,88 @@
             </div>
         </section>
 
-        <!-- SECTION: Proceso -->
+        <!-- SECTION: Proceso (STICKY SCROLL - VERSIÓN CORREGIDA 7 PASOS) -->
         <section id="proceso" class="section">
              <div class="container">
                 <div class="section-header anim-fadeInUp animate-on-scroll">
                     <h2>Un Proceso Diseñado para tu Tranquilidad</h2>
                 </div>
-                <div class="grid grid-cols-2">
-                    <div class="timeline-item anim-revealMask animate-on-scroll">
-                        <h4><span>1️⃣</span> Diagnóstico personalizado</h4>
-                        <p>Evaluación médica realmente personal y definición estratégica de tu caso, con beneficios adicionales.</p>
+                <div class="sticky-scroll-container">
+                    <div class="sticky-scroll-text-panel">
+                        <!-- Step 1 -->
+                        <div class="sticky-scroll-text-block" data-index="0">
+                            <h3>Diagnóstico Personalizado</h3>
+                            <p>Evaluación médica realmente personal y definición estratégica de tu caso, con beneficios adicionales.</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="sticky-scroll-text-block" data-index="1">
+                            <h3>Diseño Quirúrgico</h3>
+                            <p>Plan detallado según tu anatomía y objetivos, incluyendo corrección de flacidez y diástasis.</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="sticky-scroll-text-block" data-index="2">
+                            <h3>Simulación Visual 3D</h3>
+                            <p>Previsualización de resultados reales antes de decidir.</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="sticky-scroll-text-block" data-index="3">
+                            <h3>Tecnología de Élite</h3>
+                            <p>Renuvion®, Avéli™, VASER®, PAL® e injerto cerrado, en quirófano de nivel internacional.</p>
+                        </div>
+                         <!-- Step 5 -->
+                        <div class="sticky-scroll-text-block" data-index="4">
+                            <h3>Cirugía Avanzada</h3>
+                            <p>Protocolos de seguridad completos y dominio en cierres estéticos para cicatrices mínimas.</p>
+                        </div>
+                         <!-- Step 6 -->
+                        <div class="sticky-scroll-text-block" data-index="5">
+                            <h3>Recuperación Optimizada</h3>
+                            <p>Faja/sostén postquirúrgico, asistencia personalizada full time y contacto directo con el Dr.</p>
+                        </div>
+                         <!-- Step 7 -->
+                        <div class="sticky-scroll-text-block" data-index="6">
+                            <h3>Resultados Reales</h3>
+                            <p>Cambios visibles desde el día 1; vida social en semana 2; rutina completa en semana 6–8.</p>
+                        </div>
                     </div>
-                    <div class="timeline-item anim-revealMask animate-on-scroll" style="transition-delay: 100ms;">
-                        <h4><span>2️⃣</span> Diseño quirúrgico</h4>
-                        <p>Plan detallado según tu anatomía y objetivos, incluyendo corrección de flacidez y diástasis.</p>
-                    </div>
-                    <div class="timeline-item anim-revealMask animate-on-scroll">
-                        <h4><span>3️⃣</span> Simulación visual 3D</h4>
-                        <p>Previsualización de resultados reales antes de decidir.</p>
-                    </div>
-                    <div class="timeline-item anim-revealMask animate-on-scroll" style="transition-delay: 100ms;">
-                        <h4><span>4️⃣</span> Tecnología de élite</h4>
-                        <p>Renuvion®, Avéli™, VASER®, PAL® e injerto cerrado, en quirófano de nivel internacional.</p>
-                    </div>
-                    <div class="timeline-item anim-revealMask animate-on-scroll">
-                        <h4><span>5️⃣</span> Cirugía avanzada</h4>
-                        <p>Protocolos de seguridad completos y dominio en cierres estéticos para cicatrices mínimas.</p>
-                    </div>
-                    <div class="timeline-item anim-revealMask animate-on-scroll" style="transition-delay: 100ms;">
-                        <h4><span>6️⃣</span> Recuperación optimizada</h4>
-                        <p>Faja/sostén postquirúrgico, asistencia personalizada full time y contacto directo con el Dr.</p>
+                    <div class="sticky-scroll-image-panel">
+                        <div class="sticky-scroll-image-card">
+                             <!-- Image 1 -->
+                            <div class="image-content" data-index="0">
+                                <img src="https://placehold.co/600x800/2d5df4/ffffff?text=Paso+1" alt="Diagnóstico personalizado">
+                            </div>
+                             <!-- Image 2 -->
+                            <div class="image-content" data-index="1">
+                                <img src="https://placehold.co/600x800/1a1a1a/eaeaea?text=Paso+2" alt="Diseño Quirúrgico">
+                            </div>
+                             <!-- Image 3 -->
+                            <div class="image-content" data-index="2">
+                                <img src="https://placehold.co/600x800/111111/888888?text=Paso+3" alt="Simulación 3D">
+                            </div>
+                             <!-- Image 4 -->
+                            <div class="image-content" data-index="3">
+                                <div style="width:100%; height:100%; background: linear-gradient(to bottom right, #06b6d4, #2d5df4); display:flex; align-items:center; justify-content:center; color: white;">
+                                    Paso 4
+                                </div>
+                            </div>
+                             <!-- Image 5 -->
+                            <div class="image-content" data-index="4">
+                                <img src="https://placehold.co/600x800/2d5df4/ffffff?text=Paso+5" alt="Cirugía Avanzada">
+                            </div>
+                             <!-- Image 6 -->
+                            <div class="image-content" data-index="5">
+                                <img src="https://placehold.co/600x800/1a1a1a/eaeaea?text=Paso+6" alt="Recuperación Optimizada">
+                            </div>
+                             <!-- Image 7 -->
+                            <div class="image-content" data-index="6">
+                                <img src="https://placehold.co/600x800/111111/888888?text=Paso+7" alt="Resultados Reales">
+                            </div>
+                        </div>
                     </div>
                 </div>
              </div>
         </section>
+
 
         <!-- SECTION: Procedimientos Combinados -->
         <section class="section">
@@ -568,15 +808,15 @@
                         <h2>Por qué elegir al Dr. Gustavo Riaño</h2>
                         <ul class="why-us-list">
                             <li class="why-us-item">
-                                <div class="why-us-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
+                                <div class="why-us-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
                                 <div><h4>Formación internacional de élite</h4><p>Entrenado en los mejores centros del mundo, aplica técnicas de vanguardia con resultados a nivel internacional.</p></div>
                             </li>
                             <li class="why-us-item">
-                                <div class="why-us-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z"></path></svg></div>
+                                <div class="why-us-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z"></path></svg></div>
                                 <div><h4>Maestría en cicatrices invisibles</h4><p>Cierres estéticos avanzados que dejan cicatrices mínimas y ocultas: el cambio se nota en tu figura, no en las marcas.</p></div>
                             </li>
                              <li class="why-us-item">
-                                <div class="why-us-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg></div>
+                                <div class="why-us-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg></div>
                                 <div><h4>Exclusividad en la atención</h4><p>Consulta diagnóstica extensa y seguimiento directo en todo el proceso, con planes diseñados de forma totalmente personalizada.</p></div>
                             </li>
                         </ul>
@@ -590,7 +830,7 @@
             <div class="container anim-fadeInUp animate-on-scroll">
                 <h2>El Dr. Riaño prioriza calidad antes que cantidad: por eso solo toma pocas transformaciones cada mes.</h2>
                 <p>Su verdadera exclusividad no nace del marketing, sino de su dedicación absoluta. Sus consultas no tienen límite de tiempo y el seguimiento es directo con él, comprometiéndose personalmente a lograr los resultados planteados.</p>
-                <a href="#contacto" class="btn btn-primary magnetic-button" style="padding: 18px 36px; font-size: var(--font-size-md);">Consulta Dr. Riaño</a>
+                <!-- Botón eliminado -->
                 <p class="commitment-text">“Tu lugar se confirma únicamente con la consulta. El Dr. Riaño solo toma los casos que puede atender con total dedicación, garantizando resultados únicos de alto nivel.”</p>
             </div>
         </section>
@@ -625,7 +865,7 @@
                         </select>
                     </div>
                     <div class="form-buttons">
-                        <button type="submit" class="btn btn-primary magnetic-button">Enviar Consulta</button>
+                        <button type="submit" class="btn btn-primary">Enviar Consulta</button>
                     </div>
                     <p class="privacy-notice">Al enviar este formulario, aceptas nuestra <a href="#">política de privacidad</a>.</p>
                 </form>
@@ -674,16 +914,6 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // --- Navbar Scroll Behavior ---
-        const navbar = document.getElementById('main-navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
         // --- Scroll-triggered Animations using Intersection Observer ---
         const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
         const observer = new IntersectionObserver((entries) => {
@@ -700,7 +930,10 @@
                         });
                     }
 
-                    observer.unobserve(entry.target);
+                    // No des-observar para los elementos de sticky-scroll
+                    if (!entry.target.classList.contains('sticky-scroll-text-block')) {
+                         observer.unobserve(entry.target);
+                    }
                 }
             });
         }, { threshold: 0.2 }); 
@@ -708,121 +941,113 @@
         animateOnScrollElements.forEach(el => {
             observer.observe(el);
         });
+        
+        // --- Sticky Scroll Reveal Logic ---
+        const stickyTextBlocks = document.querySelectorAll('.sticky-scroll-text-block');
+        const stickyImageContents = document.querySelectorAll('.sticky-scroll-image-card .image-content');
 
-        // --- 3D Card Effect ---
-        const cardContainers = document.querySelectorAll('.card-3d-container');
+        // Set the first image to be active by default
+        if (stickyImageContents.length > 0) {
+            stickyImageContents[0].classList.add('is-active');
+        }
+        if (stickyTextBlocks.length > 0) {
+            stickyTextBlocks[0].classList.add('is-active');
+        }
 
-        cardContainers.forEach(container => {
-            const card = container.querySelector('.threed-card');
-            const cardItems = container.querySelectorAll('.card-item');
+        const stickyObserver = new IntersectionObserver((entries) => {
+            // Filter entries that are currently intersecting
+            const intersectingEntries = entries.filter(e => e.isIntersecting);
 
-            container.addEventListener('mousemove', (e) => {
-                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            // If there are any intersecting entries, proceed
+            if (intersectingEntries.length > 0) {
+                // Find the last one in the list, which is the one the user has scrolled to
+                const currentEntry = intersectingEntries[intersectingEntries.length - 1];
+                const index = currentEntry.target.dataset.index;
+                const imageContent = document.querySelector(`.sticky-scroll-image-card .image-content[data-index='${index}']`);
+
+                // First, deactivate all blocks to ensure only one is active
+                stickyTextBlocks.forEach(block => block.classList.remove('is-active'));
+                stickyImageContents.forEach(content => content.classList.remove('is-active'));
                 
-                const rect = container.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const { width, height } = rect;
-
-                const rotateX = (y / height - 0.5) * -20;
-                const rotateY = (x / width - 0.5) * 20;
-
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-                cardItems.forEach(item => {
-                    const translateZ = item.dataset.translateZ || 0;
-                    item.style.transform = `translateZ(${translateZ}px)`;
-                });
-            });
-
-            container.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-                cardItems.forEach(item => {
-                    item.style.transform = 'translateZ(0px)';
-                });
-            });
+                // Then, activate the current one
+                currentEntry.target.classList.add('is-active');
+                if (imageContent) {
+                    imageContent.classList.add('is-active');
+                }
+            }
+        }, { 
+            threshold: 0.3, // Lowered threshold for easier activation
+            rootMargin: "-35% 0px -35% 0px" // Slightly larger active area
         });
+
+        stickyTextBlocks.forEach(el => {
+            stickyObserver.observe(el);
+        });
+
 
         // --- Number Count Up Animation ---
         function startNumberCountUp(el) {
-            const target = parseFloat(el.dataset.target);
+            let targetText = el.dataset.target.replace(/,/g, '');
+            const isPrefixed = targetText.startsWith('+');
+            if(isPrefixed) targetText = targetText.substring(1);
+
+            const target = parseFloat(targetText);
             const duration = 1800; 
             let start = null;
 
             const step = (timestamp) => {
                 if (!start) start = timestamp;
                 const progress = Math.min((timestamp - start) / duration, 1);
-                const easedProgress = 1 - Math.pow(1 - progress, 3);
-                const current = easedProgress * target;
+                const easedProgress = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                let current = Math.floor(easedProgress * target);
 
-                el.textContent = Math.floor(current).toLocaleString() + (el.textContent.includes('%') ? '%' : '');
-                if(el.dataset.target.toString().startsWith('+')) el.textContent = "+" + el.textContent;
-                
+                el.textContent = current.toLocaleString();
+
+                if (isPrefixed) {
+                    el.textContent = '+' + el.textContent;
+                }
+                 if (el.dataset.target.includes('%')) {
+                    el.textContent += '%';
+                }
+
                 if (progress < 1) {
                     window.requestAnimationFrame(step);
                 } else {
-                    el.textContent = target.toLocaleString() + (el.textContent.includes('%') ? '%' : '');
-                     if(el.dataset.target.toString().startsWith('+')) el.textContent = "+" + target.toLocaleString();
+                     el.textContent = (isPrefixed ? '+' : '') + target.toLocaleString() + (el.dataset.target.includes('%') ? '%' : '');
                 }
             };
             window.requestAnimationFrame(step);
         }
+        
+        // --- Text Generate Effect ---
+        const textGenerateEffect = (elementId) => {
+            const el = document.getElementById(elementId);
+            if (!el) { return; }
 
-        // --- Testimonials Carousel ---
-        const slides = document.querySelectorAll('.testimonial-slide');
-        const nextBtn = document.querySelector('.carousel-next');
-        const prevBtn = document.querySelector('.carousel-prev');
-        let currentSlide = 0;
-        let autoplayInterval;
+            const words = el.innerText.trim().split(' ');
+            el.innerHTML = '';
 
-        function showSlide(index) {
-            if (!slides.length) return;
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
+            words.forEach(word => {
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'text-generate-word';
+                wordSpan.textContent = word;
+                el.appendChild(wordSpan);
+                el.appendChild(document.createTextNode(' '));
             });
-        }
-        
-        function nextSlide() { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); }
-        function prevSlide() { currentSlide = (currentSlide - 1 + slides.length) % slides.length; showSlide(currentSlide); }
-        
-        function startAutoplay() {
-             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !slides.length) return;
-             autoplayInterval = setInterval(nextSlide, 5000); 
-        }
 
-        function stopAutoplay() { clearInterval(autoplayInterval); }
-        
-        if (nextBtn && prevBtn && slides.length > 0) {
-            nextBtn.addEventListener('click', () => { nextSlide(); stopAutoplay(); startAutoplay(); });
-            prevBtn.addEventListener('click', () => { prevSlide(); stopAutoplay(); startAutoplay(); });
-            startAutoplay();
-        }
+            const wordSpans = el.querySelectorAll('.text-generate-word');
+            const initialDelay = 800;
+            const wordDelay = 50;
 
-        // --- Parallax & Scroll Effects ---
-        const parallaxBg = document.querySelector('.parallax-bg');
-        const parallaxYElements = document.querySelectorAll('.parallax-y');
-      
-        function handleScroll() {
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            const scrollY = window.scrollY;
-
-            if (parallaxBg) {
-                parallaxBg.style.transform = `translateY(${scrollY * 0.2}px)`;
-            }
-
-            parallaxYElements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                const elementTop = rect.top;
-                const viewportHeight = window.innerHeight;
-                if (elementTop < viewportHeight && rect.bottom > 0) {
-                     const speed = -40;
-                     const movement = (elementTop - viewportHeight / 2) / (viewportHeight / 2) * speed;
-                     el.style.transform = `translateY(${movement}px)`;
-                }
+            wordSpans.forEach((span, index) => {
+                span.style.transitionDelay = `${index * wordDelay}ms`;
+                setTimeout(() => {
+                    span.classList.add('visible');
+                }, initialDelay);
             });
-        }
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        
+        };
+        textGenerateEffect('generative-text');
+        textGenerateEffect('video-pre-text-animated');
     });
     </script>
 </body>
